@@ -17,7 +17,7 @@ function App() {
       const resData = await res.json();
       dispatch(setDataProduct(resData));
     })();
-  }, []);
+  }, [dispatch]);
  
   return (
     <>

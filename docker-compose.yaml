@@ -1,0 +1,54 @@
+services:
+  frontend:
+    build:
+      context: ./one-front
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./one-front:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=TRUE
+    depends_on:
+      - backend
+    command: ["npm", "start"]
+
+    networks:
+      - mern
+
+  backend:
+    build:
+      context: ./one-back
+    container_name: backend
+    ports: 
+    - "8080:8080"
+    volumes:
+      - ./one-back:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - mongo
+
+    networks:
+      - mern 
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mern
+
+networks:
+  mern:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
